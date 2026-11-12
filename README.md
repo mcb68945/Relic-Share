@@ -20,8 +20,28 @@ If you have [ModConfig](https://www.nexusmods.com/slaythespire2/mods/27) install
 
 ## Installation
 
-Drop `RelicShare.dll` and `RelicShare.json` into your `mods/RelicShare/` folder (inside your Slay the Spire 2 install directory, next to `data_sts2_windows_x86_64/`). Both files are required - the `.json` is what lets the game discover the mod at all.
+Put these four files in your `mods/RelicShare/` folder (inside your Slay the Spire 2 install directory, next to `data_sts2_windows_x86_64/`):
 
-## Compatibility
+- `RelicShare.dll`
+- `RelicShare.V111.dll`
+- `RelicShare.V113.dll`
+- `RelicShare.json`
 
-Built against the game's current assemblies via Harmony patches on the native relic-picking code. If a game update changes that code significantly, the mod is designed to fail safely: it logs an error and simply doesn't apply its patches rather than affecting anything else, so it can't take down the game or your save even if it stops working on a new patch.
+All four are required. The `.json` is what lets the game find the mod at all.
+
+## Game versions
+
+Works on both game v0.111 and v0.113+ (the live and beta branches as of November 2026). `RelicShare.dll` is a small loader: at startup it checks which version of the game's chest code is running and loads `RelicShare.V111.dll` or `RelicShare.V113.dll`.
+
+- **v0.113+** chests natively support several picking rounds (added for Blitz mode). Relic Share builds its tie re-pick on that: the fight plays at the tie, then only the loser picks again.
+- **v0.111** uses the older approach, which manages the re-pick itself.
+
+If a game update changes the chest code in a way the mod doesn't recognise, it logs an error and leaves the game's own behavior alone.
+
+## Building from source
+
+1. Install the .NET 9 SDK.
+2. Copy `sts2.dll`, `0Harmony.dll` and `GodotSharp.dll` from each game version's `data_sts2_windows_x86_64/` into `lib/v111/` and `lib/v113/`. They aren't in this repo because they belong to the game.
+3. Run `./build.sh`. The three DLLs land in `out/`.
+
+Source layout: `Loader.cs` (the loader), `v111/` and `v113/` (one build per game version), `shared/` (ModConfig toggle, used by both).

@@ -6,7 +6,7 @@ using MegaCrit.Sts2.Core.Modding;
 
 namespace RelicShare
 {
-    [ModInitializer(nameof(ModLoaded))]
+    // Entry point is called by the RelicShare.dll loader (see Loader.cs), not by the game directly.
     public static class RelicShareMod
     {
         internal const string HarmonyId = "RelicShare";

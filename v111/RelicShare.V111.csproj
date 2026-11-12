@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Game v0.111 chest code (live branch from Nov 2026). -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>RelicShare.V111</AssemblyName>
+    <RootNamespace>RelicShare</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GameLibs>$(MSBuildThisFileDirectory)../lib/v111</GameLibs>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+    <Compile Include="../shared/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="sts2"><HintPath>$(GameLibs)/sts2.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(GameLibs)/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="GodotSharp"><HintPath>$(GameLibs)/GodotSharp.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+</Project>
