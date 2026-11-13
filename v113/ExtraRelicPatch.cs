@@ -12,7 +12,7 @@ using MegaCrit.Sts2.Core.Runs;
 namespace RelicShare
 {
     /// <summary>
-    /// In multiplayer, top the chest up to one more relic than there are players, so a tie never leaves the
+    /// Top the chest up to one more relic than there are players (solo: pick 1 of 2), so a tie never leaves the
     /// loser with nothing to choose between. Game v0.113+ shape: the synchronizer holds the run state in
     /// <c>_runState</c> (it used to be <c>_playerCollection</c>). Co-op Blitz already adds two extra relics
     /// natively, so this adds nothing there.
@@ -27,7 +27,8 @@ namespace RelicShare
             try
             {
                 Chest.Begin(__instance);
-                if (!Chest.Applies(__instance)) { return; }
+                // Co-op ties are handled by TieRounds (multiplayer only); the extra choice applies solo too.
+                if (RunManager.Instance == null) { return; }
 
                 IRunState runState = Sync.RunState(__instance);
                 List<RelicModel>? relics = Sync.CurrentRelics(__instance);
@@ -48,6 +49,7 @@ namespace RelicShare
 
                 if (added > 0)
                 {
+                    RunMarker.Boosted(runState);
                     Sync.FireVotesChanged(__instance);
                     Log.Info($"[RelicShare] {playerCount} players in the party - added {added} extra relic choice(s), {relics.Count} total offered.", 0);
                 }

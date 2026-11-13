@@ -1,9 +1,9 @@
 {
   "id": "RelicShare",
-  "name": "Relic Share",
+  "name": "Relic +1",
   "author": "mcb68945",
-  "description": "In multiplayer, chests offer one more relic choice than there are players in the party.",
-  "version": "0.2.0",
+  "description": "Chests offer one more relic choice than there are players: pick 1 of 2 solo, and fair re-picks on co-op ties.",
+  "version": "0.3.0",
   "has_pck": false,
   "has_dll": true,
   "dependencies": [],

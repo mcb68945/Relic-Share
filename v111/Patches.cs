@@ -41,7 +41,8 @@ namespace RelicShare
 
                 var players = playerCollection.Players;
                 int playerCount = players.Count;
-                if (playerCount <= 1 || CurrentRelicsField.GetValue(__instance) is not IList { Count: not 0 } currentRelics)
+                // Solo: one extra choice too (pick 1 of 2). Co-op: one more than there are players.
+                if (playerCount < 1 || CurrentRelicsField.GetValue(__instance) is not IList { Count: not 0 } currentRelics)
                 {
                     return;
                 }
@@ -72,6 +73,7 @@ namespace RelicShare
 
                 if (added > 0)
                 {
+                    RunMarker.Boosted(runState);
                     if (VotesChangedField.GetValue(__instance) is Action votesChanged)
                     {
                         votesChanged();
