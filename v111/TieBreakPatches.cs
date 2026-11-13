@@ -257,6 +257,10 @@ namespace RelicShare
 
             NTreasureRoomRelicCollection_SuppressCompletionSignals_Patch.Current?.SetSelectionEnabled(true);
 
+            // The award animation froze every hand (= the co-op mouse pointer); give the re-pickers theirs back.
+            var needyIds = new HashSet<ulong>(needyPlayers.Select(p => p.NetId));
+            Hands.Unfreeze(NTreasureRoomRelicCollection_SuppressCompletionSignals_Patch.Current, needyIds.Contains);
+
             if (VotesChangedField.GetValue(instance) is Action votesChanged)
             {
                 votesChanged();

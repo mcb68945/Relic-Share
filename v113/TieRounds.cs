@@ -306,6 +306,13 @@ namespace RelicShare
         {
             try { HolderRemoval.Apply(HoldersRef(__instance)); }
             catch (Exception ex) { Log.Error($"[RelicShare] Holder cleanup failed: {ex}", 0); }
+
+            // Native calls this right after a between-rounds animation. After a tie re-pick round the hands are
+            // still frozen from the award animation; give the players who pick again their hand (= mouse) back.
+            if (Chest.RepickRounds > 0)
+            {
+                Hands.Unfreeze(__instance, id => !Chest.Resolved.Contains(id));
+            }
         }
     }
 }
