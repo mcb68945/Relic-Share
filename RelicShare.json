@@ -3,7 +3,7 @@
   "name": "Relic +1",
   "author": "mcb68945",
   "description": "Chests offer one more relic choice than there are players: pick 1 of 2 solo, and fair re-picks on co-op ties.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "has_pck": false,
   "has_dll": true,
   "dependencies": [],

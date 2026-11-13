@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.TreasureRelicPicking;
 using MegaCrit.Sts2.Core.Extensions;
@@ -69,13 +70,18 @@ namespace RelicShare
 
         internal static int RepickRounds;
 
+        /// <summary>A tie re-pick round is open (cleared when the chest's last round resolves).</summary>
+        internal static bool RepickOpen;
+
         internal static void Begin(TreasureRoomRelicSynchronizer sync)
         {
             _sync = sync;
             Resolved.Clear();
             ResolvedWithRelic.Clear();
             RepickRounds = 0;
+            RepickOpen = false;
             HolderRemoval.Clear();
+            Hands.LocalRepicking = () => RepickOpen && LocalContext.NetId is ulong me && !Resolved.Contains(me);
         }
 
         /// <summary>Real multiplayer (not solo, not fake multiplayer) and a chest this mod saw start.</summary>
@@ -125,6 +131,7 @@ namespace RelicShare
                 if (losers == 0 || leftAfter <= losers)
                 {
                     // No tie, or no real choice left for the losers: native finishes the chest.
+                    Chest.RepickOpen = false;
                     if (Chest.RepickRounds > 0)
                     {
                         Log.Info($"[RelicShare] Tie re-pick finished after {Chest.RepickRounds} extra round(s).", 0);
@@ -184,6 +191,7 @@ namespace RelicShare
                 Sync.FireVotesChanged(__instance);
 
                 Chest.RepickRounds++;
+                Chest.RepickOpen = true;
                 Log.Info($"[RelicShare] Tie on a relic - {stillPicking} player(s) choosing again between {relics.Count} leftover relic(s) instead of getting one auto-assigned.", 0);
                 return false;
             }
@@ -311,7 +319,7 @@ namespace RelicShare
             // still frozen from the award animation; give the players who pick again their hand (= mouse) back.
             if (Chest.RepickRounds > 0)
             {
-                Hands.Unfreeze(__instance, id => !Chest.Resolved.Contains(id));
+                Hands.ResetForRepick(__instance, id => !Chest.Resolved.Contains(id));
             }
         }
     }

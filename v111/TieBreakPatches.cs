@@ -259,7 +259,8 @@ namespace RelicShare
 
             // The award animation froze every hand (= the co-op mouse pointer); give the re-pickers theirs back.
             var needyIds = new HashSet<ulong>(needyPlayers.Select(p => p.NetId));
-            Hands.Unfreeze(NTreasureRoomRelicCollection_SuppressCompletionSignals_Patch.Current, needyIds.Contains);
+            Hands.LocalRepicking = () => MegaCrit.Sts2.Core.Context.LocalContext.NetId is ulong me && needyIds.Contains(me) && HasPendingRound(instance);
+            Hands.ResetForRepick(NTreasureRoomRelicCollection_SuppressCompletionSignals_Patch.Current, needyIds.Contains);
 
             if (VotesChangedField.GetValue(instance) is Action votesChanged)
             {
